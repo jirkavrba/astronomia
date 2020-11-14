@@ -49,7 +49,7 @@ module SimpBot
         extract: ->(json) { json["link"] }
       },
       {
-        commands: ["+sloth"],
+        commands: ["+sloth +slotho"],
         url: "https://sloth.pics/api",
         title: "Man, this API is kinda sloooow",
         extract: ->(json) { json["url"] }
@@ -61,7 +61,7 @@ module SimpBot
         extract: ->(json) { json[0] }
       },
       {
-        commands: ["+turtle"],
+        commands: ["+turtle +tortl"],
         url: "https://zelva.vrba.dev/api.php",
         title: "Tortl",
         extract: ->(json) { json["url"] }
