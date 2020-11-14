@@ -31,7 +31,7 @@ module SimpBot
         extract: ->(json) { json["url"] }
       },
       {
-        commands: ["+panda"],
+        commands: %w[+panda],
         url: "https://some-random-api.ml/img/panda",
         title: "Here, have a panda!",
         extract: ->(json) { json["link"] }
@@ -43,13 +43,13 @@ module SimpBot
         extract: ->(json) { json["link"] }
       },
       {
-        commands: ["+koala"],
+        commands: %w[+koala],
         url: "https://some-random-api.ml/img/koala",
         title: "A wild koala appears!",
         extract: ->(json) { json["link"] }
       },
       {
-        commands: ["+sloth +slotho"],
+        commands: %w[+sloth +slotho],
         url: "https://sloth.pics/api",
         title: "Man, this API is kinda sloooow",
         extract: ->(json) { json["url"] }
@@ -61,7 +61,7 @@ module SimpBot
         extract: ->(json) { json[0] }
       },
       {
-        commands: ["+turtle +tortl"],
+        commands: %w[+turtle +tortl],
         url: "https://zelva.vrba.dev/api.php",
         title: "Tortl",
         extract: ->(json) { json["url"] }
