@@ -5,31 +5,48 @@ module SimpBot
     class MessageHandler < MessageHandlerBase
 
       def handle_message(event)
+        words = event.message.content.split " "
+
         endpoint = Animals::ENDPOINTS.find { |endpoint|
-          endpoint[:commands].include? event.message.content
+          endpoint[:commands].include? words[0]
         }
 
         unless endpoint.nil?
-          response = HTTParty.get(endpoint[:url], headers: endpoint[:headers] || {}).parsed_response
-          image = endpoint[:extract].call(response)
 
-          embed = Discordrb::Webhooks::Embed.new
+          count = parse_count(words[1])
 
-          embed.title = endpoint[:title]
-          embed.timestamp = event.timestamp
-          embed.footer = Discordrb::Webhooks::EmbedFooter.new text: event.message.user.username,
-                                                              icon_url: event.message.user.avatar_url
+          count.times do 
+            response = HTTParty.get(endpoint[:url], headers: endpoint[:headers] || {}).parsed_response
+            image = endpoint[:extract].call(response)
 
-          if %w[.mp4 .webm].any? do |format|
-            image.end_with? format
+            embed = Discordrb::Webhooks::Embed.new
+
+            embed.title = endpoint[:title]
+            embed.timestamp = event.timestamp
+            embed.footer = Discordrb::Webhooks::EmbedFooter.new text: event.message.user.username,
+                                                                icon_url: event.message.user.avatar_url
+
+            if %w[.mp4 .webm].any? do |format|
+              image.end_with? format
+            end
+              embed.description = image
+            else
+              embed.image = Discordrb::Webhooks::EmbedImage.new url: image
+            end
+
+            event.channel.send_message(nil, nil, embed)
           end
-            embed.description = image
-          else
-            embed.image = Discordrb::Webhooks::EmbedImage.new url: image
-          end
-
-          event.channel.send_message(nil, nil, embed)
         end
+      end
+
+      private 
+
+      def parse_count(source)
+        if source.nil? || !source.match(/^\d$/)
+          return 1
+        end
+
+        [1, source.to_i].max
       end
     end
   end
